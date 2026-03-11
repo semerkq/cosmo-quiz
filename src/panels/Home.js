@@ -1,28 +1,46 @@
-import { Panel, PanelHeader, Header, Button, Group, Cell, Div, Avatar } from '@vkontakte/vkui';
+import { Panel, PanelHeader, Header, Button, Group, Cell, Avatar, Box } from '@vkontakte/vkui';
 import { useRouteNavigator } from '@vkontakte/vk-mini-apps-router';
 import PropTypes from 'prop-types';
 
 export const Home = ({ id, fetchedUser }) => {
-  const { photo_200, city, first_name, last_name } = { ...fetchedUser };
   const routeNavigator = useRouteNavigator();
+  const { photo_200, first_name, last_name } = { ...fetchedUser };
 
   return (
     <Panel id={id}>
-      <PanelHeader>Главная</PanelHeader>
+      <PanelHeader>CosmoQuiz 🚀</PanelHeader>
+      
       {fetchedUser && (
-        <Group header={<Header size="s">User Data Fetched with VK Bridge</Header>}>
-          <Cell before={photo_200 && <Avatar src={photo_200} />} subtitle={city?.title}>
+        <Group header={<Header size="s">Привет, исследователь космоса!</Header>}>
+          <Cell 
+            before={photo_200 && <Avatar src={photo_200} size={48} />}
+          >
             {`${first_name} ${last_name}`}
           </Cell>
         </Group>
       )}
 
-      <Group header={<Header size="s">Navigation Example</Header>}>
-        <Div>
-          <Button stretched size="l" mode="secondary" onClick={() => routeNavigator.push('persik')}>
-            Покажите Персика, пожалуйста!
+      <Group header={<Header size="s">Выбери действие</Header>}>
+        <Box style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <Button 
+            stretched 
+            size="l" 
+            mode="primary"
+            onClick={() => routeNavigator.push('/quiz')}
+          >
+            Начать игру
           </Button>
-        </Div>
+          
+          <Button 
+            stretched 
+            size="l" 
+            mode="secondary"
+            onClick={() => routeNavigator.push('/results')}
+            
+          >
+            Результаты
+          </Button>
+        </Box>
       </Group>
     </Panel>
   );
@@ -34,8 +52,5 @@ Home.propTypes = {
     photo_200: PropTypes.string,
     first_name: PropTypes.string,
     last_name: PropTypes.string,
-    city: PropTypes.shape({
-      title: PropTypes.string,
-    }),
   }),
 };

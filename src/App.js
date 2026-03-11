@@ -1,23 +1,21 @@
 import { useState, useEffect } from 'react';
-import bridge from '@vkontakte/vk-bridge';
-import { View, SplitLayout, SplitCol, ScreenSpinner } from '@vkontakte/vkui';
+import { View, SplitLayout, SplitCol } from '@vkontakte/vkui';
 import { useActiveVkuiLocation } from '@vkontakte/vk-mini-apps-router';
+import bridge from '@vkontakte/vk-bridge';
 
-import { Home } from './panels';
+import { Home, Quiz, Results } from './panels';
 import { DEFAULT_VIEW_PANELS } from './routes';
 
 export const App = () => {
   const { panel: activePanel = DEFAULT_VIEW_PANELS.HOME } = useActiveVkuiLocation();
   const [fetchedUser, setUser] = useState();
-  const [popout, setPopout] = useState(<ScreenSpinner />);
 
   useEffect(() => {
-    async function fetchData() {
-      const user = await bridge.send('VKWebAppGetUserInfo');
-      setUser(user);
-      setPopout(null);
-    }
-    fetchData();
+    bridge.send('VKWebAppInit');
+    
+    bridge.send('VKWebAppGetUserInfo')
+      .then(setUser)
+      .catch(error => console.log('Не удалось получить пользователя:', error));
   }, []);
 
   return (
@@ -25,9 +23,10 @@ export const App = () => {
       <SplitCol>
         <View activePanel={activePanel}>
           <Home id="home" fetchedUser={fetchedUser} />
+          <Quiz id="quiz" />
+          <Results id="results" />
         </View>
       </SplitCol>
-      {popout}
     </SplitLayout>
   );
 };
