@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { 
-  Panel, PanelHeader, PanelHeaderBack, Group, 
-  Box, Button, Title, Text, Progress 
+import {
+  Panel, PanelHeader, PanelHeaderBack, Group,
+  Box, Button, Title, Text, Progress
 } from '@vkontakte/vkui';
 import { useRouteNavigator } from '@vkontakte/vk-mini-apps-router';
 import PropTypes from 'prop-types';
 import { questions } from '../../utils/questions';
+import { saveScore } from '../../utils/storage';
 import './Quiz.css';
 
 export const Quiz = ({ id }) => {
@@ -40,13 +41,18 @@ export const Quiz = ({ id }) => {
 
   const handleAnswer = (index) => {
     if (showResult) return;
-    
+
     setSelected(index);
     setShowResult(true);
-    
+
     if (index === question.correct) {
       setScore(score + 1);
     }
+  };
+
+  const finishGame = async () => {
+    await saveScore(score);
+    setGameFinished(true);
   };
 
   const nextQuestion = () => {
@@ -56,7 +62,7 @@ export const Quiz = ({ id }) => {
       setShowResult(false);
       setTimeLeft(15);
     } else {
-      setGameFinished(true);
+      finishGame();
     }
   };
 
@@ -67,6 +73,11 @@ export const Quiz = ({ id }) => {
     setScore(0);
     setTimeLeft(15);
     setGameFinished(false);
+    routeNavigator.push('/quiz'); 
+  };
+
+  const goToResults = () => {
+    routeNavigator.push('/results');
   };
 
   if (gameFinished) {
@@ -101,14 +112,25 @@ export const Quiz = ({ id }) => {
               <Text className="quiz-final-message">
                 {getMessage()}
               </Text>
-              <Button 
-                size="l" 
-                mode="primary"
-                onClick={playAgain}
-                className="quiz-final-button"
-              >
-                Сыграть ещё
-              </Button>
+              <Box style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
+                <Button
+                  size="l"
+                  mode="primary"
+                  onClick={playAgain}
+                  className="quiz-final-button"
+                >
+                  Сыграть ещё
+                </Button>
+                <Button
+                  size="l"
+                  mode="secondary"
+                  onClick={goToResults}
+                  className="quiz-final-button"
+                  style={{ background: 'rgba(255,255,255,0.1)' }}
+                >
+                  К результатам
+                </Button>
+              </Box>
             </Box>
           </Box>
         </Group>
@@ -124,11 +146,11 @@ export const Quiz = ({ id }) => {
 
       <Group>
         <Box className="quiz-container">
-          <Progress 
-            value={progress} 
+          <Progress
+            value={progress}
             className="quiz-progress"
           />
-          
+
           <Box className={`quiz-timer ${timeLeft < 5 ? 'quiz-timer-danger' : 'quiz-timer-safe'}`}>
             <Text className="quiz-timer-text">
               ⏱ {timeLeft} сек
@@ -149,7 +171,7 @@ export const Quiz = ({ id }) => {
             {question.options.map((option, index) => {
               let isCorrect = showResult && index === question.correct;
               let isWrong = showResult && index === selected && index !== question.correct;
-              
+
               return (
                 <Button
                   key={index}
@@ -178,9 +200,9 @@ export const Quiz = ({ id }) => {
           )}
 
           {showResult && (
-            <Button 
-              size="l" 
-              stretched 
+            <Button
+              size="l"
+              stretched
               mode="primary"
               onClick={nextQuestion}
               className="quiz-next-button"

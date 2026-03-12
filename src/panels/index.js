@@ -1,3 +1,3 @@
 export { Home } from './HomePanel/Home';
 export { Quiz } from './QuizPanel/Quiz';
-export { Results } from './Results';
+export { Results } from './ResultsPanel/Results';
