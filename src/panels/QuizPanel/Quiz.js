@@ -177,7 +177,6 @@ export const Quiz = ({ id }) => {
             </Box>
           )}
 
-          {/* Кнопка "Далее" */}
           {showResult && (
             <Button 
               size="l" 

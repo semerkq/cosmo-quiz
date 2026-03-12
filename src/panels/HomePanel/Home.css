@@ -1,0 +1,292 @@
+/* Космический дизайн для главной страницы - ПОЛНЫЙ ЭКРАН */
+.home-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(ellipse at 20% 30%, #1a1a3a 0%, #0a0a1a 50%, #030310 100%);
+  position: relative;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Туманность */
+.home-container .nebula {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 40%, rgba(75, 0, 130, 0.2) 0%, transparent 40%),
+    radial-gradient(circle at 70% 60%, rgba(25, 25, 112, 0.2) 0%, transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(72, 61, 139, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(123, 104, 238, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  animation: nebula-pulse 15s ease-in-out infinite alternate;
+}
+
+/* Планета в углу */
+.home-container .planet {
+  position: fixed;
+  bottom: -50px;
+  right: -50px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle at 30% 30%, #c06b3e, #4a2511);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 50px rgba(192, 107, 62, 0.3),
+    inset -20px -20px 30px rgba(0,0,0,0.5),
+    inset 20px 20px 30px rgba(255,215,0,0.2);
+  opacity: 0.15;
+  transform: rotate(15deg);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Кольца планеты */
+.home-container .planet::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 60px;
+  background: rgba(210, 180, 140, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(30deg);
+  box-shadow: 0 0 30px rgba(210, 180, 140, 0.2);
+}
+
+/* Контент поверх фона */
+.home-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Карточка приветствия */
+.home-welcome-card {
+  background: rgba(20, 20, 40, 0.3);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 32px;
+  margin: 20px 0;
+  padding: 16px 24px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Аватар */
+.home-avatar {
+  border: 3px solid rgba(255, 215, 0, 0.4);
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+  transition: all 0.4s ease;
+}
+
+.home-avatar:hover {
+  transform: scale(1.1) rotate(5deg);
+  border-color: rgba(255, 215, 0, 0.8);
+  box-shadow: 0 0 50px rgba(255, 215, 0, 0.6);
+}
+
+/* Имя пользователя */
+.home-user-name {
+  font-size: 22px;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  letter-spacing: 1px;
+}
+
+/* Заголовки */
+.home-header {
+  color: #e0e0ff;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-left: 24px;
+  text-shadow: 0 0 15px rgba(102, 126, 234, 0.5);
+}
+
+/* Контейнер для кнопок */
+.home-buttons {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Кнопка "Начать игру" */
+.home-button-primary {
+  width: 100%;
+  height: 90px;
+  font-size: 26px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 50px;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  transition: all 0.2s ease;
+  margin: 0;
+}
+
+.home-button-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(102, 126, 234, 0.5);
+}
+
+.home-button-primary:active {
+  transform: translateY(0);
+}
+
+/* Кнопка "Результаты" */
+.home-button-secondary {
+  width: 100%;
+  height: 90px;
+  font-size: 26px;
+  font-weight: 600;
+  background: rgba(30, 30, 50, 0.4);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+  margin: 0;
+}
+
+.home-button-secondary:hover {
+  background: rgba(50, 50, 80, 0.5);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+}
+
+.home-button-secondary:active {
+  transform: translateY(0);
+}
+
+/* Анимация туманности */
+@keyframes nebula-pulse {
+  0% { opacity: 0.2; }
+  100% { opacity: 0.4; }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .home-content {
+    padding: 12px;
+  }
+  
+  .home-buttons {
+    padding: 12px;
+    gap: 16px;
+    max-width: 100%;
+  }
+  
+  .home-button-primary,
+  .home-button-secondary {
+    height: 80px;
+    font-size: 24px;
+    border-radius: 40px;
+    width: 100%;
+    margin: 0;
+  }
+  
+  .home-user-name {
+    font-size: 20px;
+  }
+  
+  .home-header {
+    font-size: 16px;
+    padding-left: 12px;
+  }
+  
+  .home-welcome-card {
+    padding: 12px 16px;
+    margin: 12px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-content {
+    padding: 8px;
+  }
+  
+  .home-buttons {
+    padding: 8px;
+    gap: 14px;
+  }
+  
+  .home-button-primary,
+  .home-button-secondary {
+    height: 70px;
+    font-size: 20px;
+    border-radius: 35px;
+    width: 100%;
+    margin: 0;
+  }
+  
+  .home-welcome-card {
+    padding: 10px 12px;
+    border-radius: 24px;
+  }
+  
+  .home-user-name {
+    font-size: 18px;
+  }
+  
+  .home-avatar {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 360px) {
+  .home-button-primary,
+  .home-button-secondary {
+    height: 60px;
+    font-size: 18px;
+    border-radius: 30px;
+  }
+  
+  .home-user-name {
+    font-size: 16px;
+  }
+  
+  .home-header {
+    font-size: 14px;
+  }
+  
+  .home-buttons {
+    gap: 12px;
+  }
+}
