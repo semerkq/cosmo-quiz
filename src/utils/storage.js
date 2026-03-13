@@ -13,11 +13,8 @@ export const getUser = async () => {
 };
 
 export const saveScore = async (score) => {
-  try {
-    console.log('Сохраняем результат:', score);
-    
+  try {    
     const data = await bridge.send('VKWebAppStorageGet', { keys: [STORAGE_KEY] });
-    console.log('Полученные данные:', data);
     
     let records = {};
     
@@ -50,8 +47,6 @@ export const saveScore = async (score) => {
       key: STORAGE_KEY,
       value: JSON.stringify(records)
     });
-    
-    console.log('Результат сохранен:', records);
     return records;
   } catch (error) {
     console.error('Ошибка сохранения:', error);

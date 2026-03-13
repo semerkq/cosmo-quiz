@@ -12,7 +12,6 @@ import './Quiz.css';
 export const Quiz = ({ id }) => {
   const routeNavigator = useRouteNavigator();
   
-  // ВСЕ ХУКИ ДОЛЖНЫ БЫТЬ НА ВЕРХНЕМ УРОВНЕ, ПЕРЕД ЛЮБЫМИ УСЛОВИЯМИ!
   const [gameQuestions, setGameQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState(null);
@@ -21,13 +20,11 @@ export const Quiz = ({ id }) => {
   const [timeLeft, setTimeLeft] = useState(15);
   const [gameFinished, setGameFinished] = useState(false);
 
-  // При загрузке компонента перемешиваем вопросы и берем 10 случайных
   useEffect(() => {
     const shuffled = [...questions].sort(() => Math.random() - 0.5);
     setGameQuestions(shuffled.slice(0, 10));
   }, []);
 
-  // Таймер
   useEffect(() => {
     if (showResult || gameFinished) return;
 
@@ -46,8 +43,6 @@ export const Quiz = ({ id }) => {
     return () => clearInterval(timer);
   }, [currentIndex, showResult, gameFinished]);
 
-  // Если вопросы еще не загрузились, показываем загрузку
-  // (Это условие находится ПОСЛЕ всех хуков - правильно!)
   if (gameQuestions.length === 0) {
     return (
       <Panel id={id}>
@@ -94,7 +89,6 @@ export const Quiz = ({ id }) => {
   };
 
   const playAgain = () => {
-    // Перемешиваем вопросы заново для новой игры
     const shuffled = [...questions].sort(() => Math.random() - 0.5);
     setGameQuestions(shuffled.slice(0, 10));
     setCurrentIndex(0);
@@ -109,7 +103,6 @@ export const Quiz = ({ id }) => {
     routeNavigator.push('/results');
   };
 
-  // Финальный экран после завершения игры
   if (gameFinished) {
     const getEmoji = () => {
       if (score === 10) return '🏆';

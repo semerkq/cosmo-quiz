@@ -99,7 +99,7 @@
 .home-user-name {
   font-size: 22px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--vkui--color_text_primary);
   text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
   letter-spacing: 1px;
 }
