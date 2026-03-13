@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
-import {
-  Panel, PanelHeader, PanelHeaderBack, Group,
-  Box, Button, Title, Text, Progress
+import { 
+  Panel, PanelHeader, PanelHeaderBack, Group, 
+  Box, Button, Title, Text, Progress 
 } from '@vkontakte/vkui';
 import { useRouteNavigator } from '@vkontakte/vk-mini-apps-router';
 import PropTypes from 'prop-types';
 import { questions } from '../../utils/questions';
-import { saveScore } from '../../utils/storage';
+import { saveScore } from '../../utils/storage'; 
 import './Quiz.css';
 
 export const Quiz = ({ id }) => {
   const routeNavigator = useRouteNavigator();
+  
+  // ВСЕ ХУКИ ДОЛЖНЫ БЫТЬ НА ВЕРХНЕМ УРОВНЕ, ПЕРЕД ЛЮБЫМИ УСЛОВИЯМИ!
+  const [gameQuestions, setGameQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState(null);
   const [showResult, setShowResult] = useState(false);
@@ -18,9 +21,13 @@ export const Quiz = ({ id }) => {
   const [timeLeft, setTimeLeft] = useState(15);
   const [gameFinished, setGameFinished] = useState(false);
 
-  const question = questions[currentIndex];
-  const progress = ((currentIndex + 1) / questions.length) * 100;
+  // При загрузке компонента перемешиваем вопросы и берем 10 случайных
+  useEffect(() => {
+    const shuffled = [...questions].sort(() => Math.random() - 0.5);
+    setGameQuestions(shuffled.slice(0, 10));
+  }, []);
 
+  // Таймер
   useEffect(() => {
     if (showResult || gameFinished) return;
 
@@ -39,24 +46,44 @@ export const Quiz = ({ id }) => {
     return () => clearInterval(timer);
   }, [currentIndex, showResult, gameFinished]);
 
+  // Если вопросы еще не загрузились, показываем загрузку
+  // (Это условие находится ПОСЛЕ всех хуков - правильно!)
+  if (gameQuestions.length === 0) {
+    return (
+      <Panel id={id}>
+        <PanelHeader before={<PanelHeaderBack onClick={() => routeNavigator.push('/')} />}>
+          Загрузка...
+        </PanelHeader>
+        <Group>
+          <Box className="quiz-container">
+            <Text>Подготовка вопросов...</Text>
+          </Box>
+        </Group>
+      </Panel>
+    );
+  }
+
+  const question = gameQuestions[currentIndex];
+  const progress = ((currentIndex + 1) / gameQuestions.length) * 100;
+
   const handleAnswer = (index) => {
     if (showResult) return;
-
+    
     setSelected(index);
     setShowResult(true);
-
+    
     if (index === question.correct) {
       setScore(score + 1);
     }
   };
 
   const finishGame = async () => {
-    await saveScore(score);
+    await saveScore(score); 
     setGameFinished(true);
   };
 
   const nextQuestion = () => {
-    if (currentIndex + 1 < questions.length) {
+    if (currentIndex + 1 < gameQuestions.length) {
       setCurrentIndex(currentIndex + 1);
       setSelected(null);
       setShowResult(false);
@@ -67,19 +94,22 @@ export const Quiz = ({ id }) => {
   };
 
   const playAgain = () => {
+    // Перемешиваем вопросы заново для новой игры
+    const shuffled = [...questions].sort(() => Math.random() - 0.5);
+    setGameQuestions(shuffled.slice(0, 10));
     setCurrentIndex(0);
     setSelected(null);
     setShowResult(false);
     setScore(0);
     setTimeLeft(15);
     setGameFinished(false);
-    routeNavigator.push('/quiz'); 
   };
 
   const goToResults = () => {
     routeNavigator.push('/results');
   };
 
+  // Финальный экран после завершения игры
   if (gameFinished) {
     const getEmoji = () => {
       if (score === 10) return '🏆';
@@ -107,22 +137,22 @@ export const Quiz = ({ id }) => {
                 {getEmoji()}
               </Text>
               <Title level="2" className="quiz-final-score">
-                {score}/{questions.length}
+                {score}/{gameQuestions.length}
               </Title>
               <Text className="quiz-final-message">
                 {getMessage()}
               </Text>
               <Box style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
-                <Button
-                  size="l"
+                <Button 
+                  size="l" 
                   mode="primary"
                   onClick={playAgain}
                   className="quiz-final-button"
                 >
                   Сыграть ещё
                 </Button>
-                <Button
-                  size="l"
+                <Button 
+                  size="l" 
                   mode="secondary"
                   onClick={goToResults}
                   className="quiz-final-button"
@@ -141,16 +171,16 @@ export const Quiz = ({ id }) => {
   return (
     <Panel id={id}>
       <PanelHeader before={<PanelHeaderBack onClick={() => routeNavigator.push('/')} />}>
-        Вопрос {currentIndex + 1}/{questions.length}
+        Вопрос {currentIndex + 1}/{gameQuestions.length}
       </PanelHeader>
 
       <Group>
         <Box className="quiz-container">
-          <Progress
-            value={progress}
+          <Progress 
+            value={progress} 
             className="quiz-progress"
           />
-
+          
           <Box className={`quiz-timer ${timeLeft < 5 ? 'quiz-timer-danger' : 'quiz-timer-safe'}`}>
             <Text className="quiz-timer-text">
               ⏱ {timeLeft} сек
@@ -171,7 +201,7 @@ export const Quiz = ({ id }) => {
             {question.options.map((option, index) => {
               let isCorrect = showResult && index === question.correct;
               let isWrong = showResult && index === selected && index !== question.correct;
-
+              
               return (
                 <Button
                   key={index}
@@ -200,14 +230,14 @@ export const Quiz = ({ id }) => {
           )}
 
           {showResult && (
-            <Button
-              size="l"
-              stretched
+            <Button 
+              size="l" 
+              stretched 
               mode="primary"
               onClick={nextQuestion}
               className="quiz-next-button"
             >
-              {currentIndex + 1 < questions.length ? 'Следующий вопрос →' : 'Завершить'}
+              {currentIndex + 1 < gameQuestions.length ? 'Следующий вопрос →' : 'Завершить'}
             </Button>
           )}
         </Box>
